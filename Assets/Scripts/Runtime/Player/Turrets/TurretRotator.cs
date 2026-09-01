@@ -5,12 +5,15 @@ public class TurretRotator : MonoBehaviour
     [SerializeField] private TurretAiming turretAiming;
     [SerializeField] private string barrelName = "TurretVertical";
     [SerializeField] private TurretFiringAngles turretFiringAngles;
+    [SerializeField] private float acceptanceAngle = 5;
     private Transform barrelTransform;
+    private Weapon weapon;
     private Transform parent;
 
     private void Start()
     {
         barrelTransform = transform.Find(barrelName);
+        weapon = barrelTransform.GetComponent<Weapon>();
         parent = transform.parent;
     }
 
@@ -22,7 +25,12 @@ public class TurretRotator : MonoBehaviour
             Debug.Log("Barrel not found!");
             return;
         }
-        Vector3 aimRotation = Quaternion.LookRotation(parent.InverseTransformDirection(turretAiming.aimPoint - transform.position)).eulerAngles;
+        if (turretAiming == null)
+        {
+            Debug.Log("Turret Aiming Module not found!");
+            return;
+        }
+        Vector3 aimRotation = Quaternion.LookRotation(parent.InverseTransformDirection(turretAiming.aimPoint - transform.position), transform.up).eulerAngles;
         
         //Clamp horizontal angle
         float horizontalAngle = aimRotation.y;
@@ -49,7 +57,7 @@ public class TurretRotator : MonoBehaviour
         currentAngles.x = barrelTransform.localEulerAngles.x;
 
         // If the turret can rotate 360 degrees and is facing backwards, we don't map the intended angles to (-180,180)
-        if ((horizontalAngle < -170 || horizontalAngle > 170) && verticalFiringAngles.y - verticalFiringAngles.x >= 360)
+        if ((horizontalAngle < -150 || horizontalAngle > 150) && turretFiringAngles.horizontalFiringAngles.y - turretFiringAngles.horizontalFiringAngles.x >= 360)
         {
             targetAngles = new Vector3(verticalAngle, aimRotation.y, 0);
         }
@@ -59,10 +67,13 @@ public class TurretRotator : MonoBehaviour
             currentAngles = new Vector3(((currentAngles.x + 180) % 360) - 180, ((currentAngles.y + 180) % 360) - 180, 0);
         }
         Vector3 moveAngles = targetAngles - currentAngles;
-        moveAngles = new Vector3(Mathf.Clamp(moveAngles.x, -turretFiringAngles.rotationSpeed.y, turretFiringAngles.rotationSpeed.y) * Time.deltaTime, Mathf.Clamp(moveAngles.y, -turretFiringAngles.rotationSpeed.x, turretFiringAngles.rotationSpeed.x) * Time.deltaTime, 0);
+        moveAngles = new Vector3(Mathf.Clamp(moveAngles.x, -turretFiringAngles.rotationSpeed.y * Time.deltaTime, turretFiringAngles.rotationSpeed.y * Time.deltaTime), Mathf.Clamp(moveAngles.y, -turretFiringAngles.rotationSpeed.x * Time.deltaTime, turretFiringAngles.rotationSpeed.x * Time.deltaTime), 0);
         Quaternion horiztonalRotation = Quaternion.Euler(new Vector3(0, currentAngles.y, 0) + new Vector3(0, moveAngles.y, 0));
         transform.localRotation = horiztonalRotation;
         Quaternion verticalRotation = Quaternion.Euler(new Vector3(currentAngles.x, 0, 0) + new Vector3(moveAngles.x, 0, 0));
         barrelTransform.localRotation = verticalRotation;
+
+        //Check the angle between the target rotation and current rotation to set if the weapon can shoot.
+        weapon.isAimingAtTarget = Quaternion.Angle(Quaternion.Euler(aimRotation), transform.localRotation * barrelTransform.localRotation) < acceptanceAngle;
     }
 }

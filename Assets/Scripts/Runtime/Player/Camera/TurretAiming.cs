@@ -7,7 +7,7 @@ public class TurretAiming : MonoBehaviour
     public Vector3 aimPoint;
     [SerializeField] private float aimRange = 10000f;
     [SerializeField] private LayerMask layerMask;
-    [SerializeField] private GameObject[] objectsToIgnore;
+    [SerializeField] private Collider[] objectsToIgnore;
     private CinemachineCamera cam;
 
     private void Start()
@@ -24,9 +24,9 @@ public class TurretAiming : MonoBehaviour
             foreach(RaycastHit hit in hits)
             {
                 bool shouldIgnore = false;
-                foreach (GameObject objectToIgnore in objectsToIgnore)
+                foreach (Collider objectToIgnore in objectsToIgnore)
                 {
-                    if(hit.collider.gameObject == objectToIgnore)
+                    if(hit.collider == objectToIgnore)
                     {
                         shouldIgnore = true;
                         break;

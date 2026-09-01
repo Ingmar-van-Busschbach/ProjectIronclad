@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efca37d372aab644a9f3ca29bd3f8a0c, type: 3}
   m_Name: DefaultHeatMagazine
   m_EditorClassIdentifier: Assembly-CSharp::HeatMagazine
-  currentMagazine: 0
   maxMagazine: 5
-  CoolSpeed: 1
+  firingDelay: 0.5
+  reloadDelay: 0
+  currentMagazine: 0
+  currentFiringDelay: 0
+  currentReloadDelay: 0
+  reloadPressed: 0
+  coolSpeed: 1
+  reloadCoolSpeed: 3

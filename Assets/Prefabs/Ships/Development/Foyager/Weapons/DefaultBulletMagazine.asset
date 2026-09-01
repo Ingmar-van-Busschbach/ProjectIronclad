@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09207611ad12f244893d2682223e816a, type: 3}
   m_Name: DefaultBulletMagazine
   m_EditorClassIdentifier: Assembly-CSharp::Magazine
-  currentMagazine: 0
   maxMagazine: 6
+  firingDelay: 0.5
+  reloadDelay: 3
+  currentMagazine: 0
+  currentFiringDelay: 0
+  currentReloadDelay: 0
+  reloadPressed: 0

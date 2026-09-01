@@ -50,7 +50,7 @@ public class ShipMovement : MonoBehaviour
 
         //Yaw input and correction
         float yawCorrection = yawPIDController.Update(Time.fixedDeltaTime, rigidbody.angularVelocity.y, yawInput * yawVelocity);
-        rigidbody.AddRelativeTorque(Vector3.up * yawCorrection * Time.fixedDeltaTime);
+        rigidbody.AddTorque(Vector3.up * yawCorrection * Time.fixedDeltaTime);
     }
     private void HandleMovement()
     {

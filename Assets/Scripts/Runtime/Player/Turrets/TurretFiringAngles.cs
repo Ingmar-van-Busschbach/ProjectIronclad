@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "TurretFiringAngles", menuName = "ScriptableObjects/Player/TurretFiringAngles", order = 1)]
+[CreateAssetMenu(fileName = "TurretFiringAngles", menuName = "ScriptableObjects/Turrets/TurretFiringAngles", order = 1)]
 public class TurretFiringAngles : ScriptableObject
 {
     public List<Struct_FireAngleLimit> verticalFiringAngles = new();
@@ -24,14 +24,16 @@ public class TurretFiringAngles : ScriptableObject
         {
             if (currentAngle >= fireAngleLimit.horizontalAngles.x && currentAngle <= fireAngleLimit.horizontalAngles.y)
             {
-                return fireAngleLimit.verticalAngles;
+                //Invert the X and Y to make positive rotation up, and negative rotation down.
+                return new Vector2(-fireAngleLimit.verticalAngles.y, -fireAngleLimit.verticalAngles.x);
             }
         }
         else
         {
             if (currentAngle > fireAngleLimit.horizontalAngles.x && currentAngle < fireAngleLimit.horizontalAngles.y)
             {
-                return fireAngleLimit.verticalAngles;
+                //Invert the X and Y to make positive rotation up, and negative rotation down.
+                return new Vector2(-fireAngleLimit.verticalAngles.y, -fireAngleLimit.verticalAngles.x);
             }
         }
         return new Vector2(-180, 180);
